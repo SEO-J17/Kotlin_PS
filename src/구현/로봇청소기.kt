@@ -5,8 +5,8 @@ import java.io.*
 import java.util.*
 import kotlin.properties.Delegates
 
-val dx = arrayOf(0, 1, 0, -1)
-val dy = arrayOf(-1, 0, 1, 0)
+val dx = arrayOf(-1, 0, 1, 0)
+val dy = arrayOf(0, 1, 0, -1)
 var arr: Array<Array<Int>> = arrayOf(arrayOf())
 var cnt = 0
 var n = 0
@@ -31,17 +31,41 @@ fun main() = with(System.`in`.bufferedReader()) {
     }
 
     calc(x, y, direction)
+
     print(cnt)
 }
 
 fun calc(x: Int, y: Int, direction: Int) {
-    var xx = 0
-    var yy = 0
+    val origin = direction
+    var temp = direction
     if (arr[x][y] == 0) {
         ++cnt
         arr[x][y] = 1
     }
-    if(direction == 0){
 
+    var isClean = false
+    for (i in 0 until 4) {
+        val dd = (temp + 3) % 4        //왼쪽으로 회전
+        val xx = x + dx[dd]                 //이동
+        val yy = x + dy[dd]                 //이동
+
+        if (xx > 0 && yy > 0 && xx < n && yy < m) {
+            if (arr[xx][yy] == 0) {
+                calc(xx, yy, dd)
+                isClean = true
+            }
+        }
+        temp = (temp + 3) % 4
+    }
+
+    if (!isClean) {
+        val dd = (origin + 2) % 4     //후진방향
+        val xx = x + dx[dd]
+        val yy = y + dy[dd]
+        if (xx > 0 && yy > 0 && xx < n && yy < m) {
+            if (arr[xx][yy] != 1) {
+                calc(xx, yy, origin)
+            }
+        }
     }
 }
