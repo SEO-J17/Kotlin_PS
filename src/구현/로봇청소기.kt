@@ -3,7 +3,6 @@ package 구현
 
 import java.io.*
 import java.util.*
-import kotlin.properties.Delegates
 
 val dx = arrayOf(-1, 0, 1, 0)
 val dy = arrayOf(0, 1, 0, -1)
@@ -33,38 +32,39 @@ fun main() = with(System.`in`.bufferedReader()) {
     calc(x, y, direction)
 
     print(cnt)
+
 }
 
 fun calc(x: Int, y: Int, direction: Int) {
-    val origin = direction
-    var temp = direction
+    var stand = direction
     if (arr[x][y] == 0) {
         ++cnt
-        arr[x][y] = 1
+        arr[x][y] = 7       //청소
     }
 
     var isClean = false
     for (i in 0 until 4) {
-        val dd = (temp + 3) % 4        //왼쪽으로 회전
+        val dd = (stand + 3) % 4        //왼쪽으로 회전
         val xx = x + dx[dd]                 //이동
-        val yy = x + dy[dd]                 //이동
+        val yy = y + dy[dd]                 //이동
 
         if (xx > 0 && yy > 0 && xx < n && yy < m) {
             if (arr[xx][yy] == 0) {
                 calc(xx, yy, dd)
                 isClean = true
+                break
             }
         }
-        temp = (temp + 3) % 4
+        stand = (stand + 3) % 4
     }
 
     if (!isClean) {
-        val dd = (origin + 2) % 4     //후진방향
+        val dd = (direction + 2) % 4     //후진방향
         val xx = x + dx[dd]
         val yy = y + dy[dd]
         if (xx > 0 && yy > 0 && xx < n && yy < m) {
             if (arr[xx][yy] != 1) {
-                calc(xx, yy, origin)
+                calc(xx, yy, direction)
             }
         }
     }
